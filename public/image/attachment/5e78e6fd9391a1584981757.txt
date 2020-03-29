@@ -1,0 +1,178 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Model\ContestantModel;
+use App\Model\VoucherModel;
+
+class ContestantController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $contestant=ContestantModel::all();
+        return response()->json($contestant);
+    }
+
+    public function queen()
+    {
+        $contestants=ContestantModel::where('gender','Female')->get();
+        $queens = [];
+        foreach ($contestants as $contestant) {
+            $item = ['id' => $contestant->id];
+            $item += ['name' => $contestant->name];
+            $item += ['img_url' => isset($contestant->image) ? asset('uploads/' . $contestant->image) : ""];
+            $item += ['class' => $contestant->class];
+            $item += ['vote_count' => $contestant->vote_count];
+            $item += ['vote_time_status' => $contestant->vote_time_status];
+            
+            $queens[] = $item;
+            
+        }
+        return response()->json($queens);
+    }
+    public function king()
+    {
+        $contestants=ContestantModel::where('gender','Male')->get();
+        $kings = [];
+        foreach ($contestants as $contestant) {
+            $item = ['id' => $contestant->id];
+            $item += ['name' => $contestant->name];
+            $item += ['img_url' => isset($contestant->image) ? asset('uploads/' . $contestant->image) : ""];
+            $item += ['class' => $contestant->class];
+            $item += ['vote_count' => $contestant->vote_count];
+            $item += ['vote_time_status' => $contestant->vote_time_status];
+            
+            $kings[] = $item;
+            
+        }
+        return response()->json($kings);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function queenVote(Request $request)
+    {
+        $data['message']="";
+        $voucher=VoucherModel::where('code',$request->code)->where('queen_status',1)->get();
+        if($voucher->count()==1){
+            $data['message']="Your code already have been voted";
+        }
+        else{
+            $arr['queen_status']=1;
+            $v1=VoucherModel::where('code',$request->code)->get();
+            
+            if($v1->count()==0){
+                $data['message']="Wrong Code";
+            }
+            else{
+                $v1=VoucherModel::where('code',$request->code)->first();
+                VoucherModel::where('id',$v1->id)->update($arr);
+        
+                $contestant=ContestantModel::where('id',$request->queen_id)->first();
+                $vote['vote_count']=($contestant->vote_count)+1;
+                ContestantModel::where('id',$request->queen_id)->update($vote);
+        
+                $data['message']="Successful";
+            }
+        } 
+        return response()->json($data);
+    }
+    public function kingVote(Request $request)
+    {
+        $data['message']="";
+        $voucher=VoucherModel::where('code',$request->code)->where('king_status',1)->get();
+        if($voucher->count()==1){
+            $data['message']="Your code already have been voted";
+        }
+        else{
+            $arr['king_status']=1;
+            $v1=VoucherModel::where('code',$request->code)->get();
+            if($v1->count()==0){
+                $data['message']="Wrong Code";
+            }
+            else{
+                $v1=VoucherModel::where('code',$request->code)->first();
+                VoucherModel::where('id',$v1->id)->update($arr);
+    
+                $contestant=ContestantModel::where('id',$request->king_id)->first();
+    
+                $vote['vote_count']=($contestant->vote_count)+1;
+                ContestantModel::where('id',$request->king_id)->update($vote);
+    
+                $data['message']="Successful";
+            }
+        } 
+        return response()->json($data);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}
