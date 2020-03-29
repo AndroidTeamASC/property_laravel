@@ -374,12 +374,16 @@
                         <div class="s-border"></div>
                         <div class="m-border"></div>
                         <ul class="list-unstyled list-cat">
-                            <li><a href="#">Single Family <span>(45)</span></a></li>
-                            <li><a href="#">Apartment <span>(21)</span> </a></li>
-                            <li><a href="#">Condo <span>(23)</span></a></li>
-                            <li><a href="#">Multi Family <span>(19)</span></a></li>
-                            <li><a href="#">Villa <span>(19)</span></a> </li>
-                            <li><a href="#">Other <span>(22) </span></a></li>
+                            @foreach($types as $type)
+                                 
+                                    
+                                     <li><a href="#">{{$type->type}} <span>(45)</span></a></li>
+                                     
+                                  
+                                
+                            @endforeach
+                           
+                            
                         </ul>
                     </div>
                     <!-- Helping Center start -->

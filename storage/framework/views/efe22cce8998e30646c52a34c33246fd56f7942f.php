@@ -376,12 +376,16 @@
                         <div class="s-border"></div>
                         <div class="m-border"></div>
                         <ul class="list-unstyled list-cat">
-                            <li><a href="#">Single Family <span>(45)</span></a></li>
-                            <li><a href="#">Apartment <span>(21)</span> </a></li>
-                            <li><a href="#">Condo <span>(23)</span></a></li>
-                            <li><a href="#">Multi Family <span>(19)</span></a></li>
-                            <li><a href="#">Villa <span>(19)</span></a> </li>
-                            <li><a href="#">Other <span>(22) </span></a></li>
+                            <?php $__currentLoopData = $types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                 
+                                    
+                                     <li><a href="#"><?php echo e($type->type); ?> <span>(45)</span></a></li>
+                                     
+                                  
+                                
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                           
+                            
                         </ul>
                     </div>
                     <!-- Helping Center start -->
